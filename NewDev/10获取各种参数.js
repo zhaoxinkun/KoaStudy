@@ -2,8 +2,7 @@
 const Koa = require("koa")
 //安装完koa-router后，引入
 const Router = require("koa-router")
-// 安装body解析模块
-const bodyParser = require("koa-bodyparser")
+
 
 // 实例化
 const app = new Koa();
@@ -15,10 +14,10 @@ const usersRouter = new Router({
     prefix: "/users"
 });
 
-
-// 设置一个小的数据库
-const db = [{ name: "akun" }];
-
+// 编写路由
+//  实例对象.请求方式("路由位置", (中间件参数) => {
+//      操作
+//  })
 
 router.get("/", (ctx) => {
     ctx.body = "这是主页"
@@ -26,37 +25,40 @@ router.get("/", (ctx) => {
 
 // 请求用户
 usersRouter.get("/", (ctx) => {
-    // 设置响应体,直接给数据
-    ctx.body = db;
+    ctx.body = [{ name: "akun" }, { name: "akun02" }]
 })
 // 创建用户
 usersRouter.post("/", (ctx) => {
-    // 别忘了引入模块
-    db.push(ctx.request.body);
-    ctx.body = ctx.request.body;
+    ctx.body = { name: "akun003" }
 })
 // 修改用户
 usersRouter.put('/:id', (ctx) => {
-    db[ctx.params.id * 1] = ctx.request.body;
-    ctx.body = ctx.request.body;
+    ctx.body = { name: "akun003" }
 })
 // 删除用户
 usersRouter.delete('/:id', (ctx) => {
-    db.splice(ctx.params.id * 1, 1);
     ctx.status = 204;
 })
 //  处理URL参数
 usersRouter.get("/:id", (ctx) => {
-    ctx.body = db[ctx.params.id * 1];
+    ctx.body = { name: "akun003" }
 })
 
 
 //  注册进app实例中
 app.use(router.routes());
-app.use(bodyParser());
-
 //  再注册一下
-app.use(usersRouter.routes());
+app.use(usersRouter.routes())
+
+// 编写allowedMethods  ,相应options的预检请求
+app.use(usersRouter.allowedMethods())
+
 
 //  设置监听端口
 app.listen(1314)
+
+// 启动
+// node index.js
+
+//  测试
+// 浏览器输入 http://localhost:端口号/
