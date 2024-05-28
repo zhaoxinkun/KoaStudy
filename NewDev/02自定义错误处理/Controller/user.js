@@ -5,17 +5,6 @@ const db = [{ name: "akun" }];
 class UserCtl {
     // 增
     add(ctx) {
-        // 增加校验参数规则
-        ctx.verifyParams({
-            name: {
-                type: "string",
-                required: true
-            },
-            age: {
-                type: "number",
-                required: false
-            }
-        })
         // 别忘了引入模块
         db.push(ctx.request.body);
         ctx.body = ctx.request.body;
